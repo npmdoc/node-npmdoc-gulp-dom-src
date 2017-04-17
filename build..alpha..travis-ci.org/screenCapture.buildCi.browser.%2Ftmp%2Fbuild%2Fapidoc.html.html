@@ -1,0 +1,325 @@
+<html><head></head><body><div class="apidocDiv">
+<style>
+/*csslint
+*/
+.apidocDiv {
+    background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.apidocDiv a[href] {
+    color: #33f;
+    font-weight: bold;
+    text-decoration: none;
+}
+.apidocDiv a[href]:hover {
+    text-decoration: underline;
+}
+.apidocCodeCommentSpan {
+    background: #bbf;
+    color: #000;
+    display: block;
+}
+.apidocCodeKeywordSpan {
+    color: #d00;
+    font-weight: bold;
+}
+.apidocCodePre {
+    background: #eef;
+    border: 1px solid;
+    color: #777;
+    padding: 5px;
+    white-space: pre-wrap;
+}
+.apidocFooterDiv {
+    margin-top: 20px;
+    text-align: center;
+}
+.apidocModuleLi {
+    margin-top: 10px;
+}
+.apidocSectionDiv {
+    border-top: 1px solid;
+    margin-top: 20px;
+}
+.apidocSignatureSpan {
+    color: #777;
+    font-weight: bold;
+}
+</style>
+<h1>api documentation for
+    <a href="https://github.com/cgross/gulp-dom-src">gulp-dom-src (v0.2.0)</a>
+</h1>
+<h4>Create a gulp stream from script/link tags in an HTML file.</h4>
+<div class="apidocSectionDiv"><a href="#apidoc.tableOfContents" id="apidoc.tableOfContents"><h1>table of contents</h1></a><ol>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.gulp-dom-src">module gulp-dom-src</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-dom-src.gulp-dom-src">
+            function <span class="apidocSignatureSpan"></span>gulp-dom-src
+            <span class="apidocSignatureSpan">(config)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-dom-src.duplex">
+            function <span class="apidocSignatureSpan">gulp-dom-src.</span>duplex
+            <span class="apidocSignatureSpan">(config)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-dom-src.toString">
+            function <span class="apidocSignatureSpan">gulp-dom-src.</span>toString
+            <span class="apidocSignatureSpan">()</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.gulp-dom-src.duplex">module gulp-dom-src.duplex</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-dom-src.duplex.duplex">
+            function <span class="apidocSignatureSpan">gulp-dom-src.</span>duplex
+            <span class="apidocSignatureSpan">(config)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.gulp-dom-src.toString">module gulp-dom-src.toString</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-dom-src.toString.toString">
+            function <span class="apidocSignatureSpan">gulp-dom-src.</span>toString
+            <span class="apidocSignatureSpan">()</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+</ol></div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.gulp-dom-src" id="apidoc.module.gulp-dom-src">module gulp-dom-src</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-dom-src.gulp-dom-src" id="apidoc.element.gulp-dom-src.gulp-dom-src">
+        function <span class="apidocSignatureSpan"></span>gulp-dom-src
+        <span class="apidocSignatureSpan">(config)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function domSrc(config){
+    var html = fs.readFileSync(path.join(process.cwd(),config.file),'utf8');
+    var files = findFilenames(html, config);
+
+    return vinylFs.src(files,config.options || {});
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-dom-src.duplex" id="apidoc.element.gulp-dom-src.duplex">
+        function <span class="apidocSignatureSpan">gulp-dom-src.</span>duplex
+        <span class="apidocSignatureSpan">(config)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">duplex = function (config) {
+    return through.obj(findAndReadFiles);
+
+    function findAndReadFiles(htmlFile, encoding, throughCallback) {
+        // copy config and set config.file to current html file
+        // so cwd is resolved correctly when scanning html for filenames
+        var configCopy = extend({}, config);
+        configCopy.file = htmlFile.path;
+
+        var html = htmlFile.contents.toString();
+        var filenames = findFilenames(html, configCopy);
+
+        if (filenames.length == 0) {
+            return throughCallback();
+        }
+
+        var throughStream = this;
+        async.eachSeries(filenames, function(filename, eachCallback) {
+            vinylFile.read(filename, function(err, file) {
+                if (err) return eachCallback(err);
+
+                throughStream.push(file);
+                eachCallback();
+            });
+        }, function(err) {
+            throughCallback(err);
+        });
+    }
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+#### config.options
+
+Type: `Object` (Optional)
+Default: `{}`
+
+Options passed through to the underlying `vinyl-fs`.  Can include options like `read` and `buffer`.
+
+### domSrc.<span class="apidocCodeKeywordSpan">duplex</span>(config)
+
+Creates a stream that html files can be piped into -- html files in, script or style files out.
+
+#### config.selector, config.attribute, config.cwd
+
+See above
+...</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-dom-src.toString" id="apidoc.element.gulp-dom-src.toString">
+        function <span class="apidocSignatureSpan">gulp-dom-src.</span>toString
+        <span class="apidocSignatureSpan">()</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">toString = function () {
+    return text;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+    function findAndReadFiles(htmlFile, encoding, throughCallback) {
+// copy config and set config.file to current html file
+// so cwd is resolved correctly when scanning html for filenames
+var configCopy = extend({}, config);
+configCopy.file = htmlFile.path;
+
+var html = htmlFile.contents.<span class="apidocCodeKeywordSpan">toString</span>();
+var filenames = findFilenames(html, configCopy);
+
+if (filenames.length == 0) {
+    return throughCallback();
+}
+
+var throughStream = this;
+...</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.gulp-dom-src.duplex" id="apidoc.module.gulp-dom-src.duplex">module gulp-dom-src.duplex</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-dom-src.duplex.duplex" id="apidoc.element.gulp-dom-src.duplex.duplex">
+        function <span class="apidocSignatureSpan">gulp-dom-src.</span>duplex
+        <span class="apidocSignatureSpan">(config)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">duplex = function (config) {
+    return through.obj(findAndReadFiles);
+
+    function findAndReadFiles(htmlFile, encoding, throughCallback) {
+        // copy config and set config.file to current html file
+        // so cwd is resolved correctly when scanning html for filenames
+        var configCopy = extend({}, config);
+        configCopy.file = htmlFile.path;
+
+        var html = htmlFile.contents.toString();
+        var filenames = findFilenames(html, configCopy);
+
+        if (filenames.length == 0) {
+            return throughCallback();
+        }
+
+        var throughStream = this;
+        async.eachSeries(filenames, function(filename, eachCallback) {
+            vinylFile.read(filename, function(err, file) {
+                if (err) return eachCallback(err);
+
+                throughStream.push(file);
+                eachCallback();
+            });
+        }, function(err) {
+            throughCallback(err);
+        });
+    }
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+#### config.options
+
+Type: `Object` (Optional)
+Default: `{}`
+
+Options passed through to the underlying `vinyl-fs`.  Can include options like `read` and `buffer`.
+
+### domSrc.<span class="apidocCodeKeywordSpan">duplex</span>(config)
+
+Creates a stream that html files can be piped into -- html files in, script or style files out.
+
+#### config.selector, config.attribute, config.cwd
+
+See above
+...</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.gulp-dom-src.toString" id="apidoc.module.gulp-dom-src.toString">module gulp-dom-src.toString</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-dom-src.toString.toString" id="apidoc.element.gulp-dom-src.toString.toString">
+        function <span class="apidocSignatureSpan">gulp-dom-src.</span>toString
+        <span class="apidocSignatureSpan">()</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function toString() { [native code] }</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+    function findAndReadFiles(htmlFile, encoding, throughCallback) {
+// copy config and set config.file to current html file
+// so cwd is resolved correctly when scanning html for filenames
+var configCopy = extend({}, config);
+configCopy.file = htmlFile.path;
+
+var html = htmlFile.contents.<span class="apidocCodeKeywordSpan">toString</span>();
+var filenames = findFilenames(html, configCopy);
+
+if (filenames.length == 0) {
+    return throughCallback();
+}
+
+var throughStream = this;
+...</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocFooterDiv">
+    [ this document was created with
+    <a href="https://github.com/kaizhu256/node-utility2" target="_blank">utility2</a>
+    ]
+</div>
+</div>
+</body></html>
