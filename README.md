@@ -1,4 +1,7 @@
-# api documentation for  [gulp-dom-src (v0.2.0)](https://github.com/cgross/gulp-dom-src)  [![npm package](https://img.shields.io/npm/v/npmdoc-gulp-dom-src.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-gulp-dom-src) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-gulp-dom-src.svg)](https://travis-ci.org/npmdoc/node-npmdoc-gulp-dom-src)
+# npmdoc-gulp-dom-src
+
+#### basic api documentation for  [gulp-dom-src (v0.2.0)](https://github.com/cgross/gulp-dom-src)  [![npm package](https://img.shields.io/npm/v/npmdoc-gulp-dom-src.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-gulp-dom-src) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-gulp-dom-src.svg)](https://travis-ci.org/npmdoc/node-npmdoc-gulp-dom-src)
+
 #### Create a gulp stream from script/link tags in an HTML file.
 
 [![NPM](https://nodei.co/npm/gulp-dom-src.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/gulp-dom-src)
@@ -66,7 +69,8 @@
     "scripts": {
         "test": "mocha"
     },
-    "version": "0.2.0"
+    "version": "0.2.0",
+    "bin": {}
 }
 ```
 
